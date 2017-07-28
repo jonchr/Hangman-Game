@@ -246,7 +246,7 @@
 	createLetters();
 	newGame();
 
-	//audioElement.play();
+	audioElement.play();
 
 	document.onkeyup = function(event) {
 		
