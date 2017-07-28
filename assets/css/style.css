@@ -1,0 +1,68 @@
+	body {
+		/*Sets background color of page*/
+		background-color: black;
+	}
+	
+	img {
+		background-color: transparent;
+	}
+
+	/*h1 {
+		Center justifies the "Psychic Game" title
+		text-align: center;
+	}*/
+
+	/*.panel-heading {
+		Overwrites the bootstrap background color for the panel heading
+		background-color: plum !important;
+	}*/
+	
+	h4 {
+		text-align: center;
+	}
+
+	.dinosaurFont {
+		font-family: "Dinosaur";
+	}
+
+	@font-face {
+		font-family: "Dinosaur";
+      	src: url("../Dinosaur.ttf");
+	}
+
+	.well {
+		overflow: auto;
+	}
+
+
+	.letterBox, .letterBoxA, .letterBoxB, .letterBoxC, 
+	.letterBoxD, .letterBoxE, .letterBoxF, 
+	.letterBoxG, .letterBoxH, .letterBoxI, 
+	.letterBoxJ, .letterBoxK, .letterBoxL, 
+	.letterBoxM, .letterBoxN, .letterBoxO, 
+	.letterBoxP, .letterBoxQ, .letterBoxR, 
+	.letterBoxS, .letterBoxT, .letterBoxU, 
+	.letterBoxV, .letterBoxW, .letterBoxX, 
+	.letterBoxY, .letterBoxZ {
+
+		color: black;
+		font-family: "Dinosaur";
+		font-size: 55px;
+		text-align: center;
+		vertical-align: middle;
+		line-height: 60px;
+	
+		background-color: white;
+		border: 3px solid black;
+		padding: 0px auto;
+		margin: 5px;
+		width: 60px;
+		height: 60px;
+		
+		float:left;
+
+	}
+
+	.a {
+	font-weight: bold;	
+	}

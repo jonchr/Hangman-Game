@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>Jurassic Hangman</title>
+
+	<!-- Links to reset to reset browser display settings, bootstrap for object styling, and style.css for all custom styling -->
+	<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="./assets/css/style.css">
+	
+	<!-- JQuery -->
+	<script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+    
+		
+	<h1></h1>
+	<!-- @@@ Need to make white background transparent/black -->
+	<img src="./assets/images/logo.png" alt="JurassicHangman.png" class="img-responsive center-block" height="400" width="300">
+
+	<!-- Overall Bootstrap Grid -->
+	<div class="container">
+		<!-- One row for the entire game below the logo-->
+		<div class="row">
+			<!-- First column containing the rules -->
+			<div class="col-md-3">
+				<div class="panel panel-default">
+  					<div class="panel-heading"><b><u>Situation:</u></b></div>
+  					<div class="panel-body">
+						<p>You've fallen into a wormhole that's brought you back to the age of the dinosaurs!</p>
+						<p>	Can you guess the secret word to reopen the portal before you're eaten? Press any letter to begin.</p>
+				  	</div>
+				</div>
+			</div>		
+			<!-- Second column - has the progress bar and guesses -->
+			<div class="col-md-6">
+				<div class="panel panel-default">
+  					<div class="panel-body">
+    					<!-- To be updated with number of remaining guesses in game-->
+        				<p id="numGuesses"></p>
+        				<!-- Progress bar to update with number of guesses-->
+						<!-- To be updated with previously guessed letters -->
+        				<p id="updateBoard"></p>
+  					</div>
+				</div>
+			</div>
+
+			<!-- Third column - has the record box -->
+			<div class="col-md-3">
+				<div class="panel panel-default">
+			  		<div class="panel-heading">Message Board</div>
+				  	<div class="panel-body">
+				  		<p id="winloss"></p>
+			    		 <!-- To be updated with misc. messages -->
+    					<p id="messages"></p>
+				  	</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="well" style="overflow: auto">
+    				<div id="letters"></div>
+    			</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="./assets/javascript/game.js"></script>
+	</div>
+</body>
+</html>
