@@ -34,8 +34,19 @@
 		overflow: auto;
 	}
 
+	#musicButton {
+		color: black;
+		float: left;
+		background-color: yellow;
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		padding: 7px;
+		border: 3px solid red;
+		border-radius: 50%;
+	}
 
-	.letterBox, .letterBoxA, .letterBoxB, .letterBoxC, 
+	.letterBoxA, .letterBoxB, .letterBoxC, 
 	.letterBoxD, .letterBoxE, .letterBoxF, 
 	.letterBoxG, .letterBoxH, .letterBoxI, 
 	.letterBoxJ, .letterBoxK, .letterBoxL, 
@@ -63,6 +74,6 @@
 
 	}
 
-	.a {
-	font-weight: bold;	
+	.A {
+		color: orange;
 	}

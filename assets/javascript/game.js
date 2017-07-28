@@ -22,9 +22,6 @@
 	var wincounter = 0;
 	var losscounter = 0;
 
-	//Variable for the letter the player currently guessed
-	var guessedLetter;
-
 	//Array for holding letters the player has previously guessed
 	var prevGuessedLetters = [];
 
@@ -35,6 +32,9 @@
 
 	//Variable for the number of incorrect attempts
 	var wrongAttempts = 0;
+
+	//Variable for if music is playing
+	var musicPlaying = true;
 
 	// Gets Link for Theme Song
 	// Downloaded from https://www.youtube.com/watch?v=zuIVAV5VHIM
@@ -117,13 +117,13 @@
 	}
 
 	//Updates the message board; guessWasCorrect reflects if the guess was correct or not
-	function update(guessWasCorrect) {
+	function update(guessWasCorrect, alpha) {
 
 		updateGuessesLeft(maxAttempts - wrongAttempts);
 
 		//If guess was correct, says so
 		if (guessWasCorrect) {
-			updateBoard("Nice job! " + guessedLetter + " is right!");
+			updateBoard("Nice job! " + alpha + " is right!");
 		}
 		//If guess was incorrect and they have 1 attempt left, warns them
 		else if (maxAttempts - wrongAttempts === 1) {
@@ -131,7 +131,7 @@
 		}
 		//Otherwise, just says their letter was incorrect
 		else {
-			updateBoard(guessedLetter + " is incorrect.");
+			updateBoard(alpha + " is incorrect.");
 		}
 
 	}
@@ -171,29 +171,16 @@
 
 	//Logical Functions
 
-	function pressedALetter () {
-		return alphabet.indexOf(guessedLetter) > -1;
+	function pressedALetter (alpha) {
+		return alphabet.indexOf(alpha) > -1;
 	}
 
-	function pressedANewLetter () {
-		return prevGuessedLetters.indexOf(" " + guessedLetter) === -1;
+	function pressedANewLetter (alpha) {
+		return prevGuessedLetters.indexOf(" " + alpha) === -1;
 	}
 
 
-	//Function to update progress bar based on number of guesses
-	function updateProgressBar() {
 
-		//If there's only 1 attempt left, makes the bar red
-		//If used half your attempts, makes the bar yellow
-		if (maxAttempts - prevGuessedLetters.length === 1) {
-			progressBar.style.backgroundColor = "red";
-		}
-		else if (prevGuessedLetters.length / maxAttempts > 0.5) {
-			progressBar.style.backgroundColor = "orange";
-		}
-		//Updates the percent of the progress bar
-		progressBar.style.width = (prevGuessedLetters.length / maxAttempts * 100) + "%";
-	}
 
 	//Creates the letter buttons at the bottom of the page
 	function createLetters() {
@@ -218,8 +205,31 @@
 	      // Appends each letterBox to the #letters h4 in the well.
 	      $("#letters").append(letterBoxes);
 
+	      // Assigns each button a function where it activates their letter when clicked
+	      $(".letterBox" + alphabet[i]).on("click", function() {
+	      	letterHandler($(this).attr("data-letter"));
+	      });
       	}
   	}
+
+	$("#musicButton").on("click", function() {
+		//Flips musicPlaying boolean
+		musicPlaying = !musicPlaying;
+
+		//Starts or pauses music as appropriate
+		if(musicPlaying) {
+			audioElement.play();
+			$(this).css('color', 'black');
+			$(this).css('backgroundColor', 'yellow');
+			$(this).css('borderColor', 'red');
+		}
+		else {
+			audioElement.pause();
+			$(this).css('color', 'yellow');
+			$(this).css('backgroundColor', 'black');
+			$(this).css('borderColor', 'red');
+		}
+	});
 
   	//Processes the letter in terms of progress in the game
   	function processLetter(alpha) {
@@ -240,45 +250,37 @@
   		return sum;
 	}
 
-// FUNCTION EXECUTION
-// ================================================================================
+	//Function that handle the letter processing after a button or key press
+	function letterHandler(alpha) {
 
-	createLetters();
-	newGame();
+		//Only activates if the key pressed is a letter		
+		if(pressedALetter(alpha)) {
 
-	audioElement.play();
-
-	document.onkeyup = function(event) {
-		
-		guessedLetter = event.key.toUpperCase();
-	
-		//Only activates if the key pressed is a letter
-		if(pressedALetter()) {
 			//Logs the guessed letter
-			console.log("Guessed " + guessedLetter);
+			console.log("Guessed " + alpha);
 
 			//Only activates the function if the letter hasn't already been guessed      			
-	      	if (pressedANewLetter()) {
+	      	if (pressedANewLetter(alpha)) {
 				
 				//Dims the letters available on the board
-				updateLetters(guessedLetter);
+				updateLetters(alpha);
 
 				//Adds the guess to the registry of guessed letters
-				prevGuessedLetters.push(" " + guessedLetter);
+				prevGuessedLetters.push(" " + alpha);
 
 				//If the letter they guessed is in the word
-				if (theWord.includes(guessedLetter)) {
+				if (theWord.includes(alpha)) {
 
 					//Calls the method to reveal the correct guessed letters
 					//Also updates the record of the remaining letters to be guessed
-					processLetter(guessedLetter);		
+					processLetter(alpha);		
 					
 					//If you've guessed the whole word, you win, otherwise, updates
 					if(sumArray(spelling) <= 0) {
 						win();
 					}
 					else {
-						update(true);
+						update(true, alpha);
 					}
 					
 				}
@@ -291,17 +293,48 @@
 					}
 					//Otherwise update and continue
 					else {
-						update(false);
+						update(false, alpha);
 					}
 				}
 			}
 			else {
 				//Adds snarky comment if letter was already guessed
-				updateBoard("You already guessed " + guessedLetter + "!");
+				updateBoard("You already guessed " + alpha + "!");
 			}
 		}
 		else {
 			//Adds snarky comment if button pressed isn't a letter
 			updateBoard("Please press a letter...");
 		}
+
+	}
+
+// FUNCTION EXECUTION
+// ================================================================================
+	
+	createLetters();
+	newGame();
+
+	audioElement.play();
+	document.onkeyup = function(event) {
+		
+		letterHandler(event.key.toUpperCase());
+		
 	};
+
+
+
+	//Function to update progress bar based on number of guesses
+	function updateProgressBar() {
+
+		//If there's only 1 attempt left, makes the bar red
+		//If used half your attempts, makes the bar yellow
+		if (maxAttempts - prevGuessedLetters.length === 1) {
+			progressBar.style.backgroundColor = "red";
+		}
+		else if (prevGuessedLetters.length / maxAttempts > 0.5) {
+			progressBar.style.backgroundColor = "orange";
+		}
+		//Updates the percent of the progress bar
+		progressBar.style.width = (prevGuessedLetters.length / maxAttempts * 100) + "%";
+	}
