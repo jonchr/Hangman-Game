@@ -32,10 +32,11 @@
 			<!-- First column containing the rules -->
 			<div class="col-md-3">
 				<div class="panel panel-default">
-  					<div class="panel-heading"><b><u>Situation:</u></b></div>
+  					<div class="panel-heading"><b><u>Situation</u>:</b></div>
   					<div class="panel-body">
-						<p>You've fallen into a wormhole that's brought you back to the age of the dinosaurs!</p>
-						<p>Can you guess the secret word to reopen the portal before you're eaten? Hit any letter to begin.</p>
+						<p>You've fallen through a wormhole back to the time of the dinosaurs!</p>
+						<p>Guess the secret word to reopen the portal before you become extinct! </p>
+						<p>Hit any letter button or key to begin.</p>
 				  	</div>
 				</div>
 			</div>		
@@ -43,11 +44,14 @@
 			<div class="col-md-6">
 				<div class="panel panel-default">
   					<div class="panel-body">
-    					<!-- To be updated with number of remaining guesses in game-->
-        				<p id="numGuesses"></p>
-        				<!-- Progress bar to update with number of guesses-->
+    					<!-- To be updated with images of hangman...eventually?-->
+        				<div id="hangmans"></div>
+        				
 						<!-- To be updated with previously guessed letters -->
-        				<p id="updateBoard"></p>
+        				<div id="lettersAndLines">
+        					<div class="underlines">C</div>
+
+        				</div>
   					</div>
 				</div>
 			</div>
@@ -55,9 +59,10 @@
 			<!-- Third column - has the record box -->
 			<div class="col-md-3">
 				<div class="panel panel-default">
-			  		<div class="panel-heading">Message Board</div>
+			  		<div class="panel-heading"><b><u>Game Status</u></b></div>
 				  	<div class="panel-body">
 				  		<p id="winloss"></p>
+				  		<hr>
 			    		 <!-- To be updated with misc. messages -->
     					<p id="messages"></p>
 				  	</div>
@@ -66,7 +71,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<div class="well" style="overflow: auto">
+				<div class="well">
     				<div id="letters"></div>
     			</div>
 			</div>

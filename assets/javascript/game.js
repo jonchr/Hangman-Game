@@ -1,5 +1,5 @@
 
-
+/////////////
 // VARIABLES
 // ================================================================================
 
@@ -7,7 +7,7 @@
 	var alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 	//Array of the potential words to be guessed
-	var wordBank = ["BIRD HIPPED", "BONES", "BRACHIOSAURUS", "CARNIVORE", "CLAWS", "COLOSSOL", "CRETACEOUS", "EGGS", "EXTINCT", "FEATHERS", "FOOTPRINT", "FOSSIL", "HEAVY", "HERBIVORE", "HORNS", "HUNTED", "JURASSIC", "LITTLE ARMS", "LIZARD HIPPED", "LONG NECK", "MESOZOIC", "NESTS", "PREDATOR", "PREHISTORIC", "PTERODACTYL", "REPTILE", "ROCKS", "SCARY", "SHARP", "SPIKES", "STEGOSAURUS", "TEETH", "TRIASSIC", "TRICERATOPS", "TYRANNOSAURUS", "VELOCIRAPTOR", "VOLCANO"];
+	var wordBank = ["BIRD HIPPED", "BONES", "BRACHIOSAURUS", "CARNIVORE", "CLAWS", "COLOSSOL", "CRETACEOUS", "EGGS", "EXTINCT", "FEATHERS", "FOOTPRINT", "FOSSIL", "HEAVY", "HERBIVORE", "HORNS", "HUNTED", "JURASSIC", "LITTLE ARMS", "LIZARD HIPPED", "LONG NECK", "MESOZOIC", "NESTS", "PALEONTOLOGY", "PREDATOR", "PREHISTORIC", "PTERODACTYL", "REPTILE", "ROCKS", "SCARY", "SHARP", "SPIKES", "STEGOSAURUS", "TEETH", "TRIASSIC", "TRICERATOPS", "TYRANNOSAURUS", "VELOCIRAPTOR", "VOLCANO"];
 
 	//Variable for the current word to be guessed
 	var theWord;
@@ -42,8 +42,37 @@
   	var audioElement = document.createElement("audio");
   	audioElement.setAttribute("src", "./assets/JurassicParkTheme.mp3");
 
+/////////////
 // FUNCTIONS
 // ================================================================================
+
+	//Creates the letter buttons at the bottom of the page
+	function createLetters() {
+
+		//Creates a button for each letter
+		for(var i = 0; i < alphabet.length; i++) {
+	      
+	      //Creates a button equal to $("<div>");
+	      var letterBoxes = $("<div>");
+
+	      //Assigns the button classname "letterBox" plus its letter
+	      letterBoxes.attr("class", "letterBox " + alphabet[i]);
+
+	      //Assigns each letterBox a data-attribute called "data-letter", with a value eqaual to "letters[i]"
+	      letterBoxes.attr("data-letter", alphabet[i]);
+	      
+	      //Gives each letterBox a text equal to letters[i].
+	      letterBoxes.text(alphabet[i]);
+
+	      // Appends each letterBox to the #letters h4 in the well.
+	      $("#letters").append(letterBoxes);
+
+	      // Assigns each button a function where it activates their letter when clicked
+	      $("." + alphabet[i]).on("click", function() {
+	      	controlCenter($(this).attr("data-letter"));
+	      });
+      	}
+  	}
 
 	//function for setting the page and functions up for a new game
 	function newGame() {
@@ -56,162 +85,61 @@
 		
 		//Splits the word into an array to track the correctly guessed letters
 		for (var i = 0; i < theWord.length; i++) {
-			spelling.push(1);	
+			//If there is a space, places 0 so the user doesn't need to guess it
+			if(theWord[i] === " ") {
+				spelling.push(0);
+			}
+			//Otherwise places 1 for all letters
+			else {
+				spelling.push(1);
+			}
 		}
 
 		//Logs the answer word (yes, you can cheat using console)
 		console.log("The word is " + theWord);
 
-		//Sets or updates the displayed win/loss record on the board
-		updateWinLoss();
-
 		//Resets the guess attempts for the new game
 		wrongAttempts = 0;
-		updateGuessesLeft(maxAttempts);
 		
 		//Clears the letters guessed for the new game
 		updateLetters(" ");
-	
+
+		//creates the new lines for the new word
+		createLines();
 	}
 
-	function win() {
+	//Function that creates lines for the word	
+	function createLines() {
 
-		console.log("Win!\n-----------");
+		console.log("Creating lines!");
 
-		//Increases the number of wins recorded
-		wincounter++;
+		//Removes all previous lines from the lettersAndLines <div> box
+		$("#lettersAndLines").empty();
 
-		//Gives different messages based on how much you've won
-		if (wincounter >= 5) {
-			updateBoard("Wow! You're really good at this :) !");
-		}
-		else if (wincounter > 1) {
-			updateBoard("You won again! Keep going?");
-		}
-		else {
-			updateBoard("You won! Play again?");
-		}
+		//Loops through theWord and creates a new HTML lettersAndLines element for each letter
+		for(var i = 0; i < theWord.length; i++) {
+			
+			var letterLine = $("<div>");
 
-		newGame();
-	}
+			//Assigns the CSS class lettersAndLines to it so it's underlined
+			letterLine.attr("class", "underlines");
 
-	function lose() {
+			//Assigns a number attribute to the line equal to it's position in the word
+			letterLine.attr("position", i);
 
-		console.log("Lose\n-----------")
-
-		//Increases the number of losses recorded
-		losscounter++;
-
-		//Gives different messages based on how much you've won
-		if (losscounter >= 5) {
-			updateBoard("You better stop before you're extinct!");
-		}
-		else if (losscounter > 1) {
-			updateBoard("You lost again! It was " + theWord + ". Keep at it?");
-		}
-		else {
-			updateBoard("You lost :( But I already got a new word! " + "(For the record, it was " + theWord + ")");
-		}
-
-		newGame();
-	}
-
-	//Updates the message board; guessWasCorrect reflects if the guess was correct or not
-	function update(guessWasCorrect, alpha) {
-
-		updateGuessesLeft(maxAttempts - wrongAttempts);
-
-		//If guess was correct, says so
-		if (guessWasCorrect) {
-			updateBoard("Nice job! " + alpha + " is right!");
-		}
-		//If guess was incorrect and they have 1 attempt left, warns them
-		else if (maxAttempts - wrongAttempts === 1) {
-			updateBoard("You have one attempt left. Make the most of it!");
-		}
-		//Otherwise, just says their letter was incorrect
-		else {
-			updateBoard(alpha + " is incorrect.");
-		}
-
-	}
-
-	//Functions to update HTML text on the page
-	function updateWinLoss () {
-		document.getElementById("winloss").innerHTML = "Wins: " + wincounter + "\n" + "Losses: " + losscounter;
-	}
-
-	function updateGuessesLeft (numGuessLeft) {
-		document.getElementById("numGuesses").innerHTML = "Guesses left: " + numGuessLeft;
-	}
-
-	function updateBoard (boardMessage) {
-		document.getElementById("messages").innerHTML = boardMessage;
-	}	
-
-	//Color-Activates/deactivates the letters at the bottom of board
-	function updateLetters (alpha) {
-		//Reactivates all the letters when passed a space from newGame()
-		if(alpha === " ") {
-			for(var i = 0; i < alphabet.length; i++) {
-				var allBoxes = document.querySelector(".letterBox" + alphabet[i]);
-				allBoxes.style.color="black";
-				allBoxes.style.borderColor="black";
-				allBoxes.style.backgroundColor="white";
+			//If a space, gets rid of the underline
+			if (theWord[i] === " ") {
+				console.log("Hiding space: " + (theWord[i] === " "));
+				letterLine.css("border-bottom-style", "hidden");
 			}
-			//change all letters to .letterBox
-		}
-		else {
-			var offBox = document.querySelector(".letterBox" + alpha);
-			offBox.style.color = "red";
-			offBox.style.borderColor = "red";
-			offBox.style.backgroundColor = "black";
+
+			//Appends the line to the section lettersAndLines
+			$("#lettersAndLines").append(letterLine);
 		}
 	}
 
-	//Logical Functions
 
-	function pressedALetter (alpha) {
-		return alphabet.indexOf(alpha) > -1;
-	}
-
-	function pressedANewLetter (alpha) {
-		return prevGuessedLetters.indexOf(" " + alpha) === -1;
-	}
-
-
-
-
-	//Creates the letter buttons at the bottom of the page
-	function createLetters() {
-
-		//Creates a button for each letter
-		for(var i = 0; i < alphabet.length; i++) {
-	      
-	      //Creates a button equal to $("<div>");
-	      var letterBoxes = $("<div>");
-
-	      //Assigns the button classname "letterBox" plus its letter
-	      letterBoxes.attr("class", "letterBox" + alphabet[i]);
-
-	      //To figure out how to assign the clicks to each button
-
-	      //Assigns each letterBox a data-attribute called "data-letter", with a value eqaual to "letters[i]"
-	      letterBoxes.attr("data-letter", alphabet[i]);
-	      
-	      //Gives each letterBox a text equal to letters[i].
-	      letterBoxes.text(alphabet[i]);
-
-	      // Appends each letterBox to the #letters h4 in the well.
-	      $("#letters").append(letterBoxes);
-
-	      // Assigns each button a function where it activates their letter when clicked
-	      $(".letterBox" + alphabet[i]).on("click", function() {
-	      	letterHandler($(this).attr("data-letter"));
-	      });
-      	}
-  	}
-
+  	// Starts/stops music on button press. Also inverse button colors
 	$("#musicButton").on("click", function() {
 		//Flips musicPlaying boolean
 		musicPlaying = !musicPlaying;
@@ -231,27 +159,9 @@
 		}
 	});
 
-  	//Processes the letter in terms of progress in the game
-  	function processLetter(alpha) {
-  		for (var i = 0; i < spelling.length; i++) {
-  			if(alpha === theWord[i]) {
-  				spelling[i] = 0;
-  				//Update line of letters[i];
-  			}
-  		}
-  	}
-
-  	//Returns the sum of all entries in an array
-  	function sumArray(myArray) {
-  		var sum = 0;
-  		for (var i = 0; i < myArray.length; i++) {
-  			sum += myArray[i];
-  		}
-  		return sum;
-	}
-
-	//Function that handle the letter processing after a button or key press
-	function letterHandler(alpha) {
+	//Function that controls directs the game after a letter is guessed
+	//Is activated either by key press or button press
+	function controlCenter(alpha) {
 
 		//Only activates if the key pressed is a letter		
 		if(pressedALetter(alpha)) {
@@ -261,9 +171,6 @@
 
 			//Only activates the function if the letter hasn't already been guessed      			
 	      	if (pressedANewLetter(alpha)) {
-				
-				//Dims the letters available on the board
-				updateLetters(alpha);
 
 				//Adds the guess to the registry of guessed letters
 				prevGuessedLetters.push(" " + alpha);
@@ -309,6 +216,146 @@
 
 	}
 
+	// Processes a player's win
+	function win() {
+
+		console.log("Win!\n-----------");
+
+		//Increases the number of wins recorded
+		wincounter++;
+
+		//Sets or updates the displayed win/loss record on the board
+		updateWinLoss();
+
+		//Gives different messages based on how much you've won
+		if (wincounter >= 5) {
+			updateBoard("This is becoming a walk in the park for you. You're quite the paleontologist!");
+		}
+		else if (wincounter > 1) {
+			updateBoard("You've made it there and back again! How was it?");
+		}
+		else {
+			updateBoard("You've managed to escape! If you're up for the thrill, why not go back once more?");
+		}
+		
+		//Pauses for 5 seconds, then starts a new game
+		setTimeout(function() {
+
+			//Calls a new game
+			newGame();
+		}, 3000);
+	}
+
+	// Processes a player's loss
+	function lose() {
+
+		console.log("Lose\n-----------")
+
+		//Increases the number of losses recorded
+		losscounter++;
+
+		//Sets or updates the displayed win/loss record on the board
+		updateWinLoss();
+
+		//Gives different messages based on how much you've won
+		if (losscounter >= 5) {
+			updateBoard("What's that shadow in the sky?...this might be it for you.");
+		}
+		else if (losscounter > 1) {
+			updateBoard("Quick, shout + " + theWord + "! It could win you enough time to keep trying.");
+		}
+		else {
+			updateBoard("The word was " + theWord + " but the portal's gone! Can you make it to the next one?");
+		}
+		//Calls a new game
+		newGame();
+	}
+
+	//Updates the message board based on whether the guess was right or wrong
+	//guessWasCorrect variable reflects if the guess was correct or not
+	function update(guessWasCorrect, alpha) {
+
+		//Dims the letters available on the board
+		updateLetters(alpha);
+
+		//If guess was correct, says so
+		if (guessWasCorrect) {
+			updateBoard("Nice job! " + alpha + " is right!");
+		}
+		//If guess was incorrect and they have 1 attempt left, warns them
+		else if (maxAttempts - wrongAttempts === 1) {
+			updateBoard("They're getting closer! This is your last shot!");
+		}
+		//Otherwise, just says their letter was incorrect
+		else {
+			updateBoard(alpha + " is incorrect.");
+		}
+	}
+
+	//Processes the letter in terms of progress in the game
+  	function processLetter(alpha) {
+  		for (var i = 0; i < spelling.length; i++) {
+  			if(alpha === theWord[i]) {
+  				spelling[i] = 0;
+  				$(".underlines").filter("[position=" + i + "]").text(alpha);
+  			}
+  		}
+  	}
+
+	//Color-Activates/deactivates the letters at the bottom of board
+	function updateLetters (alpha) {
+		//Reactivates all the letters when passed a space from newGame()
+		if(alpha === " ") {
+			for(var i = 0; i < alphabet.length; i++) {
+				var allBoxes = document.querySelector("." + alphabet[i]);
+				allBoxes.style.color="black";
+				allBoxes.style.borderColor="black";
+				allBoxes.style.backgroundColor="white";
+			}
+		}
+		else {
+			var offBox = document.querySelector("." + alpha);
+			offBox.style.color = "red";
+			offBox.style.borderColor = "red";
+			offBox.style.backgroundColor = "black";
+		}
+	}
+
+	///////////////////////////////////////////////
+	// Functions to update HTML text on the page //
+	///////////////////////////////////////////////
+
+	function updateWinLoss () {
+		document.getElementById("winloss").innerHTML = "Wins: " + wincounter + "\n" + "Losses: " + losscounter;
+	}
+
+	function updateBoard (boardMessage) {
+		document.getElementById("messages").innerHTML = boardMessage;
+	}	
+
+	////////////////////////////
+	// Math/Logical Functions //
+	////////////////////////////
+
+	//Returns 
+	function pressedALetter (alpha) {
+		return alphabet.indexOf(alpha) > -1;
+	}
+
+	function pressedANewLetter (alpha) {
+		return prevGuessedLetters.indexOf(" " + alpha) === -1;
+	}
+
+  	//Returns the sum of all entries in an array
+  	function sumArray(myArray) {
+  		var sum = 0;
+  		for (var i = 0; i < myArray.length; i++) {
+  			sum += myArray[i];
+  		}
+  		return sum;
+	}
+
+//////////////////////
 // FUNCTION EXECUTION
 // ================================================================================
 	
@@ -318,23 +365,6 @@
 	audioElement.play();
 	document.onkeyup = function(event) {
 		
-		letterHandler(event.key.toUpperCase());
+		controlCenter(event.key.toUpperCase());
 		
 	};
-
-
-
-	//Function to update progress bar based on number of guesses
-	function updateProgressBar() {
-
-		//If there's only 1 attempt left, makes the bar red
-		//If used half your attempts, makes the bar yellow
-		if (maxAttempts - prevGuessedLetters.length === 1) {
-			progressBar.style.backgroundColor = "red";
-		}
-		else if (prevGuessedLetters.length / maxAttempts > 0.5) {
-			progressBar.style.backgroundColor = "orange";
-		}
-		//Updates the percent of the progress bar
-		progressBar.style.width = (prevGuessedLetters.length / maxAttempts * 100) + "%";
-	}

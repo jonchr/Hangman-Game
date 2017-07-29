@@ -2,60 +2,57 @@
 		/*Sets background color of page*/
 		background-color: black;
 	}
-	
-	img {
-		background-color: transparent;
-	}
 
-	/*h1 {
-		Center justifies the "Psychic Game" title
-		text-align: center;
-	}*/
-
-	/*.panel-heading {
-		Overwrites the bootstrap background color for the panel heading
-		background-color: plum !important;
-	}*/
-	
-	h4 {
-		text-align: center;
-	}
-
-	.dinosaurFont {
-		font-family: "Dinosaur";
-	}
-
-	@font-face {
+	/*Dinosaur font*/
+	@font-face { 
+		/*Created by Jonathan Harris, used with permission, for more information, see:
+		https://jonchr.github.io/Hangman-Game/assets/Dinosaur_Font_License_READ_THIS.txt*/
 		font-family: "Dinosaur";
       	src: url("../Dinosaur.ttf");
 	}
 
+	/*Patagonia font*/
+	@font-face { 
+		font-family: "Patagonia";
+      	src: url("../Patagonia.ttf");
+	}
+
+	/*Jurassic Park font*/
+	@font-face { 
+		/*Used with permission by Font2u.com, for more information, see:
+		https://jonchr.github.io/Hangman-Game/assets/Jurassic_Park_readme.txt*/
+		font-family: "JurassicPark";
+      	src: url("../Jurassic_Park.ttf");
+      	font-weight:normal;
+      	font-style:normal;
+	}
+
 	.well {
+		/*Set so that the well properly contains all of the letter buttons*/
 		overflow: auto;
 	}
 
 	#musicButton {
-		color: black;
-		float: left;
-		background-color: yellow;
-		position: absolute;
+		//Formatting for the letter button  
+		color: black; /*Black music note*/
+		background-color: yellow; /*Yellow background*/
+		border: 3px solid red; /*Red border*/
+		border-radius: 50%; /*Circular border*/
+		padding: 7px; /*Slight padding between music note and border*/
+
+		/*Position set to near top left corner*/
+		position: absolute; 
 		top: 10px;
 		left: 10px;
-		padding: 7px;
-		border: 3px solid red;
-		border-radius: 50%;
+		float: left;
 	}
 
-	.letterBoxA, .letterBoxB, .letterBoxC, 
-	.letterBoxD, .letterBoxE, .letterBoxF, 
-	.letterBoxG, .letterBoxH, .letterBoxI, 
-	.letterBoxJ, .letterBoxK, .letterBoxL, 
-	.letterBoxM, .letterBoxN, .letterBoxO, 
-	.letterBoxP, .letterBoxQ, .letterBoxR, 
-	.letterBoxS, .letterBoxT, .letterBoxU, 
-	.letterBoxV, .letterBoxW, .letterBoxX, 
-	.letterBoxY, .letterBoxZ {
+	/*Letterbox class and individual classes for every letter button*/
+	.letterBox, .A, .B, .C, .D, .E, .F, .G,
+	.H, .I, .J, .K, .L, .M, .N, .O, .P, .Q, 
+	.R, .S, .T, .U, .V, .W, .X, .Y, .Z {
 
+		/*Black, Dinosaur font, size 55, centered, 60 px line height*/
 		color: black;
 		font-family: "Dinosaur";
 		font-size: 55px;
@@ -63,6 +60,7 @@
 		vertical-align: middle;
 		line-height: 60px;
 	
+		/*Background white, black border, set height and width*/
 		background-color: white;
 		border: 3px solid black;
 		padding: 0px auto;
@@ -71,9 +69,45 @@
 		height: 60px;
 		
 		float:left;
-
 	}
 
-	.A {
-		color: orange;
+	/*Container holding lines for Hangman letters*/
+	#lettersAndLines {
+		/*Centers all letter lines*/
+		display: flex;
+		justify-content: center;
+	}
+	
+	/*Class for Hangman letters with lines below them*/
+	.underlines {
+		/*Black*/
+		/*color: black;*/
+		font-family: Tahoma;
+		font-size: 35px;
+		border-bottom: 7px double black;
+		border-radius: 3px;
+
+		text-align: center;
+		height: 55px;
+		width: 40px;
+		margin: 0px 5px;
+
+		float:left;
+	}
+
+	/* The animation code */
+	@keyframes glitter {
+    0%   {color:red;}
+	10%	 {color:orange;}
+    25%  {color:yellow;}
+    45%	 {color:green;}
+    60%  {color:blue;}
+    70%  {color:indigo;}
+    85%  {color:purple;}
+    100% {color:pink;}
+	}
+
+	/* The element to apply the animation to */
+	.rainbowText {
+	    animation: glitter 4s infinite;
 	}
