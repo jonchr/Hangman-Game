@@ -262,7 +262,7 @@
 			updateBoard("What's that shadow in the sky?...this might be it for you.");
 		}
 		else if (losscounter > 1) {
-			updateBoard("Quick, shout + " + theWord + "! It could win you enough time to keep trying.");
+			updateBoard("Quick, shout '"+ theWord + "'! It could win you enough time to keep trying.");
 		}
 		else {
 			updateBoard("The word was " + theWord + " but the portal's gone! Can you make it to the next one?");
